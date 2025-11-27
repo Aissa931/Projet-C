@@ -16,3 +16,22 @@ Soutenance (45min) :
 10min, questions
 
 API : SDL2 (Grpahismes, son...), voir SFML
+
+Fonctions à ajouter :
+-Ajouter un menu principal (boutons fonctionnels, aspect graphique/sonore...)
+-Niveau de difficulté, à prévoir (varier nombres ennemis, vitesse, points de vie)
+-Ajouter interface visuel (vie, points) en haut à gauche
+-Différents "personnages" (caractéristiques variés)
+-Fonction pour tirer (nouveau rect, trajectoire...)
+-Missile, à prévoir (vitesse, nombres, dégâts)
+-Génération des ennemis/civils (position random)
+-Fonction pour la collision (missile / ennemis-civiles)
+-Fonction pour gérer la vie et les points
+-Variation du fond d'écran selon la distance parcouru
+
+
+Aïssa :
+-Variation du fond d'écran
+-Interface visuel
+-Fonction pour gérer vie et points
+-Fonction de collision (missiles/ennemis et joueur/ennemis)
