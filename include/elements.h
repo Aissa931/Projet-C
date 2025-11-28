@@ -16,8 +16,9 @@ typedef struct {
 } Missile;
 
 void init_missile(Joueur *joueur, Missile *missile);
-void lancer_missile(const Uint8* keystates, Joueur *joueur, Missile *missiles);
-void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile *missile);
+void lancer_missile(const Uint8* keystates, Joueur *joueur, Missile missiles[]);
+void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile missiles[]);
+
 
 
 // ----------------------------- ENNEMIS ------------------------------

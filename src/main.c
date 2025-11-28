@@ -35,8 +35,6 @@ int main(int argc, char* argv[])
     Joueur joueur;
     player_init(&joueur);
 
-    Missile missiles[MAX_MISSILES] = {};
-
     // Tableau de missiles
     Missile missiles[MAX_MISSILES] = {0};
 
