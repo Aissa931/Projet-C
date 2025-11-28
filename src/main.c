@@ -37,27 +37,59 @@ int main(int argc, char* argv[])
 
     Missile missiles[MAX_MISSILES] = {};
 
+    // Tableau de missiles
+    Missile missiles[MAX_MISSILES] = {0};
+
+    // Tableau d'ennemis
+    Ennemi ennemis[MAX_ENNEMIS];
+    int nb_ennemis = MAX_ENNEMIS;
+    init_ennemis(renderer, ennemis, nb_ennemis, 0);
+
+    // Score et points de vie du joueur
+    int score = 0;
+    int vies  = 3;
+
     while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = 0;
-            }
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            running = 0;
         }
-
-        const Uint8* keystates = SDL_GetKeyboardState(NULL);
-        player_handle_input(&joueur, keystates);
-        player_in_window(&joueur);
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-        player_render(&joueur, renderer);
-        
-        lancer_missile(keystates, &joueur, missiles);
-        missile_render(&joueur, renderer, missiles);
-
-        SDL_RenderPresent(renderer);
-        
-        SDL_Delay(16); // petite pause ~60 FPS
     }
+
+    const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+    // Mise à jour du joueur
+    player_handle_input(&joueur, keystates);
+    player_in_window(&joueur);
+
+    // Mise à jour des missiles (tir + déplacement)
+    lancer_missile(keystates, &joueur, missiles);
+
+    // Mise à jour des ennemis (déplacement)
+    ennemis_moove(ennemis, nb_ennemis);
+
+    // Gestion des collisions
+    handle_missile_ennemi_collisions(missiles, ennemis, &score);
+    handle_joueur_ennemi_collisions(&joueur, ennemis, &vies);
+
+    // Condition de fin de partie
+    if (vies <= 0) {
+        printf("Game Over ! Score final : %d\n", score);
+        running = 0;
+    }
+
+    // Rendu
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    player_render(&joueur, renderer);
+    missile_render(&joueur, renderer, missiles);
+    ennemis_render(renderer, ennemis, nb_ennemis);
+
+    SDL_RenderPresent(renderer);
+    SDL_Delay(16);
+}
+
 
     // 4. Nettoyer avant de quitter
     SDL_DestroyRenderer(renderer);

@@ -1,7 +1,8 @@
 #include "elements.h"
+#include <stdlib.h>
 #define FIRE_COOLDOWN 200
 
-// -------------------------------------------------MISSILES------------------------------------------------
+// ----------------------------- MISSILES -----------------------------
 Missile missiles[MAX_MISSILES];
 
 void init_missile(Joueur *joueur, Missile *missile) {
@@ -50,7 +51,8 @@ void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile missiles[]) 
     }
 }
 
-// -------------------------------------------------ENNEMIS------------------------------------------------
+
+// ----------------------------- ENNEMIS ------------------------------
 
 Ennemi ennemis[MAX_ENNEMIS];
 
@@ -80,5 +82,50 @@ void ennemis_render(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
     for (int i = 0; i < nb_ennemis; i++) {
         SDL_RenderFillRect(renderer, &ennemis[i].rect);
+    }
+}
+
+
+// ---------------------------- COLLISIONS ----------------------------
+
+static int rects_intersect(const SDL_Rect *a, const SDL_Rect *b) {
+    return (a->x < b->x + b->w &&
+            a->x + a->w > b->x &&
+            a->y < b->y + b->h &&
+            a->y + a->h > b->y);
+}
+
+// Missile touche ennemi -> missile désactivé, ennemi "détruit", score++
+void handle_missile_ennemi_collisions(Missile missiles[], Ennemi ennemis[], int *score) {
+    for (int i = 0; i < MAX_MISSILES; i++) {
+        if (missiles[i].actif == 0) continue;
+
+        for (int j = 0; j < MAX_ENNEMIS; j++) {
+            if (ennemis[j].code != 1) continue;
+
+            if (rects_intersect(&missiles[i].rect, &ennemis[j].rect)) {
+                missiles[i].actif = 0;
+                ennemis[j].code = 0;
+                if (score != NULL) {
+                    (*score)++;
+                }
+                break; // ce missile est détruit, on arrête les checks pour lui
+            }
+        }
+    }
+}
+
+// Ennemi touche joueur -> ennemi "détruit", vies--
+void handle_joueur_ennemi_collisions(Joueur *joueur, Ennemi ennemis[], int *vies) {
+    if (joueur == NULL || vies == NULL || *vies <= 0) return;
+
+    for (int j = 0; j < MAX_ENNEMIS; j++) {
+        if (ennemis[j].code != 1) continue;
+
+        if (rects_intersect(&joueur->rect, &ennemis[j].rect)) {
+            ennemis[j].code = 0;
+            (*vies)--;
+            // plus tard : invincibilité temporaire, knockback, etc.
+        }
     }
 }
