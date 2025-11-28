@@ -21,8 +21,10 @@ typedef struct {
     SDL_Rect rect;
     int vitesse;
     int code;
+    int actif;
 } Ennemi;
 
+void init_ennemis(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis, int frequence);
 void init_ennemi(SDL_Renderer *renderer, Ennemi *ennemi);
 void ennemis_moove(Ennemi ennemis[], int nb_ennemis);
 void ennemis_render(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis);

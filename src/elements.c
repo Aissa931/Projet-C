@@ -2,7 +2,7 @@
 #define FIRE_COOLDOWN 200
 
 // -------------------------------------------------MISSILES------------------------------------------------
-Missile missiles[MAX_MISSILES];
+//Missile missiles[MAX_MISSILES];
 
 void init_missile(Joueur *joueur, Missile *missile) {
     missile->rect.h = 10;
@@ -52,33 +52,57 @@ void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile missiles[]) 
 
 // -------------------------------------------------ENNEMIS------------------------------------------------
 
-Ennemi ennemis[MAX_ENNEMIS];
+//Ennemi ennemis[MAX_ENNEMIS];
 
 void init_ennemis(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis, int frequence) {
     for (int i = 0; i < nb_ennemis; i++) {
         init_ennemi(renderer, &ennemis[i]);
-        ennemis[i].code = 1;
     }
 }
 
 void init_ennemi(SDL_Renderer *renderer, Ennemi *ennemi) {
     ennemi->rect.h = 20;
     ennemi->rect.w = 20;
-    ennemi->rect.x = rand() % (800 - ennemi->rect.w);
-    ennemi->rect.y = 0;
+    //ennemi->rect.x = rand() % (800 - ennemi->rect.w);
+    //ennemi->rect.y = 0;
     ennemi->vitesse = 5;
-    ennemi->code = 1;
+    ennemi->code = 1; // code 1 = type d'ennemi
+    ennemi->actif = 0;
 }
 
 void ennemis_moove(Ennemi ennemis[], int nb_ennemis) {
+    static Uint32 dernier_spawn = 0;
+    const Uint32 spawnDelay = 800;
+    Uint32 temps_actuel = SDL_GetTicks();
+
+    if (temps_actuel - dernier_spawn > spawnDelay) {
+        for (int i = 0; i < nb_ennemis; i++) {
+            if (ennemis[i].actif == 0) {
+                init_ennemi(NULL, &ennemis[i]);
+                ennemis[i].rect.x = rand() % (800 - ennemis[i].rect.w);
+                ennemis[i].rect.y = 0;
+                ennemis[i].actif = 1;
+                dernier_spawn = temps_actuel;
+                break;
+            }
+        }
+    }
+
     for (int i = 0; i < nb_ennemis; i++) {
-        ennemis[i].rect.y += ennemis[i].vitesse;
+        if (ennemis[i].actif == 1) {
+            ennemis[i].rect.y += ennemis[i].vitesse;
+            if (ennemis[i].rect.y > 900) {
+                ennemis[i].actif = 0;
+            }
+        }
     }
 }
 
 void ennemis_render(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
     for (int i = 0; i < nb_ennemis; i++) {
-        SDL_RenderFillRect(renderer, &ennemis[i].rect);
+        if (ennemis[i].actif == 1) {
+            SDL_RenderFillRect(renderer, &ennemis[i].rect);
+        }
     }
 }

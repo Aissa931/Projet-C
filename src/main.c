@@ -35,6 +35,9 @@ int main(int argc, char* argv[])
     Joueur joueur;
     player_init(&joueur);
 
+    Ennemi ennemis[MAX_ENNEMIS] = {};
+    init_ennemis(renderer, ennemis, MAX_ENNEMIS, 100);
+
     Missile missiles[MAX_MISSILES] = {};
 
     while (running) {
@@ -50,6 +53,9 @@ int main(int argc, char* argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
         player_render(&joueur, renderer);
+
+        ennemis_moove(ennemis, MAX_ENNEMIS);
+        ennemis_render(renderer, ennemis, MAX_ENNEMIS);
         
         lancer_missile(keystates, &joueur, missiles);
         missile_render(&joueur, renderer, missiles);
