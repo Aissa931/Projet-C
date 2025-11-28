@@ -7,6 +7,8 @@
 #include <SDL2/SDL.h>
 #include "player.h"
 
+
+// ----------------------------- MISSILES -----------------------------
 typedef struct {
     SDL_Rect rect;
     int vitesse;
@@ -14,9 +16,12 @@ typedef struct {
 } Missile;
 
 void init_missile(Joueur *joueur, Missile *missile);
-void lancer_missile(const Uint8* keystates, Joueur *joueur, Missile *missiles);
-void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile *missile);
+void lancer_missile(const Uint8* keystates, Joueur *joueur, Missile missiles[]);
+void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile missiles[]);
 
+
+
+// ----------------------------- ENNEMIS ------------------------------
 typedef struct {
     SDL_Rect rect;
     int vitesse;
@@ -26,7 +31,13 @@ typedef struct {
 
 void init_ennemis(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis, int frequence);
 void init_ennemi(SDL_Renderer *renderer, Ennemi *ennemi);
+void init_ennemis(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis, int frequence);
 void ennemis_moove(Ennemi ennemis[], int nb_ennemis);
 void ennemis_render(SDL_Renderer *renderer, Ennemi ennemis[], int nb_ennemis);
+
+
+// ---------------------------- COLLISIONS ----------------------------
+void handle_missile_ennemi_collisions(Missile missiles[], Ennemi ennemis[], int *score);
+void handle_joueur_ennemi_collisions(Joueur *joueur, Ennemi ennemis[], int *vies);
 
 #endif

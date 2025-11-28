@@ -1,4 +1,5 @@
 #include "elements.h"
+#include <stdlib.h>
 #define FIRE_COOLDOWN 200
 
 // -------------------------------------------------MISSILES------------------------------------------------
@@ -50,7 +51,8 @@ void missile_render(Joueur *joueur, SDL_Renderer *renderer, Missile missiles[]) 
     }
 }
 
-// -------------------------------------------------ENNEMIS------------------------------------------------
+
+// ----------------------------- ENNEMIS ------------------------------
 
 //Ennemi ennemis[MAX_ENNEMIS];
 
